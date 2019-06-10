@@ -7,10 +7,10 @@
  * @author     Hans-Guenter Heiserholt {@link http://www.moba-hgh.de}
  * @author     Created on 18-Sep-2014
  * @license    GNU/GPL Public License version 2 or later
- * @version    1.1.2
+ * @version    1.2.0
+
  *
- * 1.1.2 - remove ../ from media/xxxxx
- *       + change en-GB language files
+ * 1.2.0 + Changing for J4
  * 1.1.1 + code restructering
  * 1.1.0 + changed all buttons with listitemtask ....
  *       + changed homepage-/mail-address
@@ -46,6 +46,8 @@ class plgSystemListViewRemPos extends JPlugin
 		var $com_adv;
 		var $com_std_found;
 		var $com_std;
+		
+		
     /**
      * Constructor
      *
@@ -73,25 +75,23 @@ class plgSystemListViewRemPos extends JPlugin
 			/* ----------------------------------
 			 * Get a handle to the Joomla! application object
 			 * ---------------------------------- */  
-			$application = JFactory::getApplication();
-			if ($com_adv_found === true || $com_std_found === true) 
+			$app = JFactory::getApplication();
+			
+			if ( $com_adv_found !== false || $com_std_found !== false ) 
 			{
-				if ( strpos ($_SERVER['REQUEST_URI'],'=edit') || 
-					 strpos ($_SERVER['REQUEST_URI'],'id=')	
-				   ) 
+				if ( strpos ($_SERVER['REQUEST_URI'],'=edit') || strpos ($_SERVER['REQUEST_URI'],'id=')	) 
 				{
 		//			 do nothing in editor-mode !
 					return;     
 				}
 				/* ----------------------------------
-				 * get the document-object
+				 * get the document-objekt
 				 * ---------------------------------- */
-// bringt error $doc = & JFactory::getDocument();
-				$doc = JFactory::getDocument();
+				$doc = & JFactory::getDocument();
 				/* ----------------------------------
 				 * put in js-script to load js-code in html
 				 * ---------------------------------- */
-					$doc->addScript('/media/plg_listviewrempos/js/listviewrempos.js');
+					$doc->addScript('../media/plg_listviewrempos/js/listviewrempos.js');
 				/* ----------------------------------
 				 * set load-event to html
 				 * ---------------------------------- */  
@@ -118,12 +118,14 @@ class plgSystemListViewRemPos extends JPlugin
 			/* ----------------------------------
 			 * do change html
 			 * ---------------------------------- */
-			if ($com_adv_found === true || $com_std_found === true)
+			if ( $com_adv_found !== false || $com_std_found !== false )
 			{
 				/* ----------------------------------
 				 * get the rendered html
 				 * ---------------------------------- */
-				$html = JResponse::getbody();
+// J3				$html = JResponse::getbody();
+					$html = JFactory::getApplication()->getBody();
+
 				/* ----------------------------------
 				 * extract the body-code ... all between <body> .... </body>
 				 * ---------------------------------- */
@@ -137,16 +139,7 @@ class plgSystemListViewRemPos extends JPlugin
 				 * the clicked position within the list
 				 * ---------------------------------- */
 				$oncl = 'onclick="LVRP_getPos()" ';
-// 				if (strpos($_SERVER['REQUEST_URI'],'administrator') {
-// 					$admin_lnk = '/administrator/index.php?option=';
-// 				} else {
-// 		            $pos = strpos($_SERVER['REQUEST_URI'],'/add-new-entry')
-//		 			alert ('strpos=' + $pos);
-// 					if ( $pos < 1 ){
-// 						$admin_lnk = '/';
-// 					}					
-//				}
- 				$admin_lnk ='/administrator/index.php?option=';
+				$admin_lnk ='/administrator/index.php?option=';
 				if ($com_adv) 
 				{
 					$href = 'href="' .$admin_lnk .$com_adv;
@@ -165,13 +158,13 @@ class plgSystemListViewRemPos extends JPlugin
 				/*
 				 * Add a messages to the message queue
 				 */
-					$application->enqueueMessage(JText::_(PLG_SYSTEM_LVRP_NOPARMS), 'warning');         
+					$app->enqueueMessage(JText::_(PLG_SYSTEM_LVRP_NOPARMS), 'warning');         
 				} 
 				/* ----------------------------------
 				 * do the change: 
 				 * Put the onClick call before all matching href's
 				 *
-				 * str_replace ( search-string , ergebnis , zu durchsuchender string  )
+				 * str_replace ( such-string , ergebnis , zu durchsuchender string  )
 				 * ----------------------------------------------------------------- */
 				$body_new = str_replace($href, $oncl .$href, $match[0]);
 				$body_new = str_replace($hrefH, $oncl .$hrefH, $body_new);
@@ -187,7 +180,9 @@ class plgSystemListViewRemPos extends JPlugin
 				/* ----------------------------------
 				 * put back the changed html
 				 * ---------------------------------- */
-				JResponse::setBody($html);
+// J3				JResponse::setBody($html);
+				$html = JFactory::getApplication()->setBody($html);
+
 			}
 		} // End  function onAfterRender
     		/************************************************************
@@ -348,13 +343,13 @@ class plgSystemListViewRemPos extends JPlugin
 					$com_std_found = true;
 					$com_std = 'com_finder';
 				}
-			}
+			}			
 			elseif (strpos ($_SERVER['REQUEST_URI'],'option=com_installer') ) {
 				if ( $this->params->get('LVRP_com_installer') ) {
 					$com_std_found = true;
 					$com_std = 'com_installer';
 				}
-			}   
+			}			
 			elseif (strpos ($_SERVER['REQUEST_URI'],'option=com_languages') ) {
 				if ( $this->params->get('LVRP_com_languages') ) {
 					$com_std_found = true;
@@ -433,12 +428,19 @@ class plgSystemListViewRemPos extends JPlugin
 					$com_std = 'com_weblinks';
 				}
 			}
-			elseif (strpos ($_SERVER['REQUEST_URI'],'option=com_fields') ) {   // since 3.7
+			elseif (strpos ($_SERVER['REQUEST_URI'],'option=com_fields') ) { 
 				if ( $this->params->get('LVRP_com_fields') ) {
 					$com_std_found = true;
 					$com_std = 'com_fields';
 				}
 			}
+			elseif (strpos ($_SERVER['REQUEST_URI'],'option=com_field_groups') ) {
+				if ( $this->params->get('LVRP_com_field_groups') ) {
+					$com_std_found = true;
+					$com_std = 'com_field_groups';
+				}
+			}   
+
 			return;
 		} // End function checkStdParms    
 } // End class plgSystemListViewRemPos
