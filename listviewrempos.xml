@@ -76,13 +76,17 @@
  </div>]]>  
  </description>
   <files folder="site">
-		<folder>images</folder>
-		<folder>js</folder>
+		<folder>assets</folder>
+		<!--folder>js</folder-->
 		<folder>language</folder>
 		<filename>index.html</filename>
 		<filename plugin="listviewrempos">listviewrempos.php</filename>
 		<filename>listviewrempos_CHANGELOG.php</filename>
   </files>
+  	<media destination="plg_listviewrempos" folder="site/assets">
+		<folder>images</folder>
+		<folder>js</folder>
+	</media>
   <params/>
   <config>
     <fields name="params">
