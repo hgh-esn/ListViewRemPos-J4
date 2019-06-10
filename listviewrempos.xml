@@ -75,6 +75,10 @@
        </table>
  </div>]]>  
  </description>
+	<changelogurl>https://moba-hgh.de/updateserver/extensions/updates/changelog.xml</changelogurl>
+	<updateservers>
+		<server name="HGHs UpdateServer - ListviewRemPos" type="extension" priority="2">https://moba-hgh.de/updateserver/extensions/updates/plg_listviewrempos.xml</server>
+	</updateservers>
   <files folder="site">
 		<folder>assets</folder>
 		<!--folder>js</folder-->
