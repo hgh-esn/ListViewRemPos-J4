@@ -1,4 +1,4 @@
-# plg_system_ListViewRemPos
+# plg_system_ListViewRemPos J4
 
 This Joomla Plugin for the backend, solves a behavior of Joomla-Listviews.
 So when selecting an entry in a Joomla listview, the return goes to the top(Joomla standard) entry.
